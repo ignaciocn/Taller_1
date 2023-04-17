@@ -130,7 +130,8 @@ public class Salario {
      * Calcula el impuesto único a partir de la base de cálculo.
      */
     private double calcularImpuestoUnico(double baseCalculo) {
-        double impuestoUnico = 0;
+        double impuestoUnico;
+        impuestoUnico = 0;
         if (baseCalculo <= 0) {
             impuestoUnico = 0;
         } else if (baseCalculo <= 13.5 * 29167) {
