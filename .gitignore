@@ -89,18 +89,22 @@ public class CalculadoraSalario {
 
 
 2
-/**
- * Clase para calcular el salario líquido de una persona.
+* Clase para calcular el salario líquido de una persona.
  */
 public class Salario {
-    private double salarioBruto;
-    private double afp;
-    private double prevision;
-    private double salud;
-    private double gratificacion;
+    private final double salarioBruto;
+    private final double afp;
+    private final double prevision;
+    private final double salud;
+    private final double gratificacion;
 
     /**
      * Constructor que recibe los datos del salario bruto, AFP, previsión, salud y gratificación.
+     * @param salarioBruto
+     * @param afp
+     * @param prevision
+     * @param salud
+     * @param gratificacion
      */
     public Salario(double salarioBruto, double afp, double prevision, double salud, double gratificacion) {
         this.salarioBruto = salarioBruto;
@@ -112,6 +116,7 @@ public class Salario {
 
     /**
      * Calcula el salario líquido a partir de los datos ingresados.
+     * @return 
      */
     public double calcularSalario() {
         double baseCalculo = salarioBruto - afp - prevision - salud;
@@ -150,4 +155,7 @@ public class Salario {
         }
         return gratificacionCalculada;
     }
+}
+
+    
 }
