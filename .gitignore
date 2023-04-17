@@ -21,3 +21,133 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+import java.util.Scanner;
+
+/**
+ * Clase principal para calcular el salario líquido a partir del salario bruto
+ * y otros datos ingresados por el usuario.
+ */
+public class CalculadoraSalario {
+
+    /**
+     * Método principal para ejecutar la aplicación.
+     *
+     * @param args argumentos de línea de comando (no utilizados en este caso)
+     */
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Ingrese el salario bruto:");
+        double salarioBruto = scanner.nextDouble();
+
+        System.out.println("Ingrese la tasa de AFP actual (porcentaje):");
+        double tasaAfp = scanner.nextDouble();
+
+        System.out.println("Ingrese 'F' para Fonasa o 'I' para Isapre:");
+        char tipoSalud = scanner.next().charAt(0);
+        double valorPlanIsapre = 0;
+        if (tipoSalud == 'I') {
+            System.out.println("Ingrese el valor del plan de Isapre en UF:");
+            valorPlanIsapre = scanner.nextDouble();
+        }
+
+        System.out.println("Ingrese el monto de la gratificación (ingrese 0 si no tiene):");
+        double gratificacion = scanner.nextDouble();
+
+        double salarioLiquido = calcularSalarioLiquido(salarioBruto, tasaAfp, tipoSalud, valorPlanIsapre, gratificacion);
+        System.out.printf("El salario líquido es: %.2f%n", salarioLiquido);
+    }
+
+    /**
+     * Calcula el salario líquido a partir del salario bruto y otros datos.
+     *
+     * @param salarioBruto    el salario bruto
+     * @param tasaAfp         la tasa de AFP (porcentaje)
+     * @param tipoSalud       'F' para Fonasa, 'I' para Isapre
+     * @param valorPlanIsapre el valor del plan de Isapre en UF (si corresponde)
+     * @param gratificacion   el monto de la gratificación (0 si no tiene)
+     * @return el salario líquido
+     */
+    public static double calcularSalarioLiquido(double salarioBruto, double tasaAfp, char tipoSalud, double valorPlanIsapre, double gratificacion) {
+        double descuentoAfp = salarioBruto * (tasaAfp / 100);
+        double descuentoSalud;
+        if (tipoSalud == 'F') {
+            descuentoSalud = salarioBruto * 0.07; // Tasa estándar de Fonasa: 7%
+        } else {
+            descuentoSalud = valorPlanIsapre * 30000; // Suponiendo que 1 UF = 30.000 pesos
+        }
+
+        double salarioNeto = salarioBruto - descuentoAfp - descuentoSalud + gratificacion;
+        return salarioNeto;
+    }
+}
+
+
+
+
+
+
+
+2
+/**
+ * Clase para calcular el salario líquido de una persona.
+ */
+public class Salario {
+    private double salarioBruto;
+    private double afp;
+    private double prevision;
+    private double salud;
+    private double gratificacion;
+
+    /**
+     * Constructor que recibe los datos del salario bruto, AFP, previsión, salud y gratificación.
+     */
+    public Salario(double salarioBruto, double afp, double prevision, double salud, double gratificacion) {
+        this.salarioBruto = salarioBruto;
+        this.afp = afp;
+        this.prevision = prevision;
+        this.salud = salud;
+        this.gratificacion = gratificacion;
+    }
+
+    /**
+     * Calcula el salario líquido a partir de los datos ingresados.
+     */
+    public double calcularSalario() {
+        double baseCalculo = salarioBruto - afp - prevision - salud;
+        double impuestoUnico = calcularImpuestoUnico(baseCalculo);
+        double gratificacionCalculada = calcularGratificacion(baseCalculo, gratificacion);
+        double salarioLiquido = salarioBruto - afp - prevision - salud - impuestoUnico + gratificacionCalculada;
+        return salarioLiquido;
+    }
+
+    /**
+     * Calcula el impuesto único a partir de la base de cálculo.
+     */
+    private double calcularImpuestoUnico(double baseCalculo) {
+        double impuestoUnico = 0;
+        if (baseCalculo <= 0) {
+            impuestoUnico = 0;
+        } else if (baseCalculo <= 13.5 * 29167) {
+            impuestoUnico = baseCalculo * 0.04;
+        } else if (baseCalculo <= 30 * 29167) {
+            impuestoUnico = (baseCalculo - 13.5 * 29167) * 0.08 + 13.5 * 29167 * 0.04;
+        } else if (baseCalculo <= 50 * 29167) {
+            impuestoUnico = (baseCalculo - 30 * 29167) * 0.135 + (30 * 29167 - 13.5 * 29167) * 0.08 + 13.5 * 29167 * 0.04;
+        } else {
+            impuestoUnico = (baseCalculo - 50 * 29167) * 0.23 + (50 * 29167 - 30 * 29167) * 0.135 + (30 * 29167 - 13.5 * 29167) * 0.08 + 13.5 * 29167 * 0.04;
+        }
+        return impuestoUnico;
+    }
+
+    /**
+     * Calcula la gratificación a partir de la base de cálculo y la gratificación ingresada por el usuario.
+     */
+    private double calcularGratificacion(double baseCalculo, double gratificacion) {
+        double gratificacionCalculada = 0;
+        if (gratificacion > 0) {
+            gratificacionCalculada = baseCalculo * gratificacion;
+        }
+        return gratificacionCalculada;
+    }
+}
